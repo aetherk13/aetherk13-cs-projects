@@ -1,19 +1,16 @@
 blinker = [0 0 0 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 1 0 0; 0 0 0 0 0];
 beacon = [0 0 0 0 0 0; 0 1 1 0 0 0; 0 1 0 0 0 0; 0 0 0 0 1 0; 0 0 0 1 1 0; 0 0 0 0 0 0];
-table = zeros(50);
-table(25,24:27) = 1;
-table(26,24) = 1;
-table(26,27) = 1;
-mtable = zeros(50, 49);
-mtable(24:27,24) = 1;
-mtable(24:27,26) = 1;
-mtable(24,23) = 1;
-mtable(27,23) = 1;
-mtable(24,27) = 1;
-mtable(27,27) = 1;
+table = [0 0 0 0 0 0; 0 1 1 1 1 0; 0 1 0 0 1 0; 0 0 0 0 0 0];
+mtable = [0 0 0 0 0 0 0; 0 1 1 0 1 1 0; 0 1 0 0 0 1 0; 0 1 0 0 0 1 0; 0 1 1 0 1 1 0; 0 0 0 0 0 0 0];
 
-imagesc(genIter(, mtable))
+
+imagesc(import(50, 49, mtable))
 colormap(gray)
+
+function [formated] = import(rows, columns, unformated);
+    formated = zeros(rows, columns);
+    formated(rows/2-size(unformated,1)/2+1:rows/2+size(unformated,1)/2, columns/2-size(unformated,2)/2+1:columns/2+size(unformated,2)/2) = unformated;
+end
 
 function [nextGen] = genChange(prevGen)
     nextGen = zeros(size(prevGen,1), size(prevGen,2)); %next generation
