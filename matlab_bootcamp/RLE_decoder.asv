@@ -1,0 +1,4 @@
+function [out_mat] = RLE_decoder(filename)
+
+in_stri
+    
