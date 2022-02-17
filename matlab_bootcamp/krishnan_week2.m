@@ -9,4 +9,4 @@ end
 %imagesc(prevGen)
 %colormap(gray)
 
-RLE_decoder("beacon.rle")
+A = RLE_decoder("trafficjam.rle")

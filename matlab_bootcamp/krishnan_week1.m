@@ -1,8 +1,11 @@
 
+%Zeroeth generation imported (part d)
 filename = 'GoL_input.xlsx';
-gen0=xlsread(filename); %Zeroeth generation imported (part d)
+gen0=xlsread(filename); 
+
+
 prevGen=gen0;
-numGens=24; %number of generations
+numGens=1; %number of generations
 [numrows, numcols] = size(gen0);
 for k=1:1:numGens
     nextGen = zeros(numrows, numcols); %next generation
@@ -10,10 +13,12 @@ for k=1:1:numGens
     for i=1:1:numrows
         for j=1:1:numcols
             %calculating number of living neighbours
-            if i==1 || j==1 || i==numrows || j==numcols %identifies if cell in matrix is a corner or edge (part c)
+            %identifies if cell in matrix is a corner or edge (PART C)
+            if i==1 || j==1 || i==numrows || j==numcols
                 Ln(i,j) = sum(prevGen(i-ceil((i-1)/numrows):i-floor((i-numrows)/numrows), j-ceil((j-1)/numcols):j-floor((j-numcols)/numcols)), 'all') - prevGen(i,j);
+            %number of living neighbours for the inside matrix only (PART A)
             else
-                Ln(i,j) = sum(prevGen(i-1:i+1, j-1:j+1), 'all') - prevGen(i,j);%number of living neighbours for the inside matrix only (part a)
+                Ln(i,j) = sum(prevGen(i-1:i+1, j-1:j+1), 'all') - prevGen(i,j);
             end
     
             %calculating next gen state
@@ -34,7 +39,7 @@ for k=1:1:numGens
     prevGen = nextGen;
 end
 
-%output image of matrix (part b)
+%output image of matrix (PART B)
 imagesc(nextGen)
 colormap(gray)
 
