@@ -14,7 +14,7 @@ function [out_mat] = RLE_decoder(filename)
         index = 1;
         for j=1:1:col %each of the split parts
             if any(regexp(row_split{j}(1) ,'[0-9]')) %if the first digit is a number
-                multiplier = str2num(row_split{j}(1)); %fix for 2 digits
+                multiplier = sscanf(row_split{j},'%d'); %fix for 2 digits
                     for k=1:1:multiplier %multiplier
                         if row_split{j}(2)=='o'
                             out_mat(i,index) = 1;
