@@ -5,14 +5,13 @@ function [final_gen] = conway(filename, numGens)
     prevGen = gen0;
 
     v = VideoWriter("videotest.avi");
-    v.FrameRate = 5;
-    open(v);
+
     for k=1:1:numGens
         prevGen = GOL(prevGen);
          
         imagesc(prevGen);
-        colormap(gray);
-        frame = getframe(gcf);
+        a = colormap(gray);
+        frame = getframe(a);
         writeVideo(v, frame);
     end
     close(v);
