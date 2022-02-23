@@ -1,7 +1,7 @@
 conway("trafficjam.rle", 23)
 
 function [final_gen] = conway(filename, numGens)
-    gen0 = padarray(RLE_decoder(filename),[10 10],0,'both') %Zeroeth generation imported and padded
+    gen0 = padarray(RLE_decoder(filename),[10 10],0,'both'); %Zeroeth generation imported and padded
     prevGen = gen0;
 
     v = VideoWriter("videotest.avi");

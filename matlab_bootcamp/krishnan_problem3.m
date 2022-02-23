@@ -78,7 +78,7 @@ function importRLE_button_Callback(hObject, eventdata, handles)
 % hObject    handle to importRLE_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+setappdata(handles.importRLE_button, 'gen0', getappdata(handles.RLE_text, 'gen0'));
 
 
 function RLE_text_Callback(hObject, eventdata, handles)
@@ -120,7 +120,10 @@ function generations_popup_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns generations_popup contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from generations_popup
-
+str = get(handles.generations_popup, 'String');
+val = get(handles.generations_popup,'Value');
+max_gen = sscanf(str{val}, '%d');
+setappdata(handles.generations_popup, 'max_gen', max_gen);
 
 % --- Executes during object creation, after setting all properties.
 function generations_popup_CreateFcn(hObject, eventdata, handles)
@@ -134,28 +137,44 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes on button press in load_button.
+function load_button_Callback(hObject, eventdata, handles)
+% hObject    handle to load_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+gen0= padarray(getappdata(handles.importRLE_button, 'gen0'), [1,1], 0, 'both');
+setappdata(handles.load_button, 'gen0', gen0);
+imagesc(handles.axes1, gen0);
+colormap(gray);
+cell_of_gens = {gen0};
+setappdata(handles.load_button, 'cell_of_gens', cell_of_gens);
+gen_num = 0;
+setappdata(handles.load_button, 'gen_num', gen_num);
 
 % --- Executes on button press in exportMovie_button.
 function exportMovie_button_Callback(hObject, eventdata, handles)
 % hObject    handle to exportMovie_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in load_button.
-function load_button_Callback(hObject, eventdata, handles)
-% hObject    handle to load_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-gen0_padded = padarray(getappdata(handles.RLE_text, 'gen0'),[10 10],0,'both');
-imagesc(handles.axes1, gen0_padded);
-colormap(gray);
-cell_of_gens = {gen0_padded};
-setappdata(handles.load_button, 'cell_of_gens', cell_of_gens);
-gen_num = 0;
-setappdata(handles.load_button, 'gen_num', gen_num);
-
-
+    prevGen = getappdata(handles.load_button, 'gen0');
+    frame_rate = getappdata(handles.frameRate_popup, 'frame_rate');
+    max_gen = getappdata(handles.generations_popup, 'max_gen');
+    display(max_gen);
+    v = VideoWriter("exportmovie.avi");
+    v.FrameRate = frame_rate;
+    open(v);
+    imagesc(handles.axes1, prevGen);
+    colormap(gray);
+    frame = getframe(handles.axes1);
+    writeVideo(v, frame);
+    for k=1:1:getappdata(handles.generations_popup, 'max_gen');
+        prevGen = GOL(prevGen);
+        imagesc(handles.axes1, prevGen);
+        colormap(gray);
+        frame = getframe(handles.axes1);
+        writeVideo(v, frame);
+    end
+    close(v);
 
 % --- Executes on button press in stepBack_button.
 function stepBack_button_Callback(hObject, eventdata, handles)
@@ -185,14 +204,6 @@ colormap(gray);
 setappdata(handles.load_button, 'cell_of_gens', cell_of_gens);
 setappdata(handles.load_button, 'gen_num', gen_num);
 
-
-% --- Executes on button press in play_button.
-function play_button_Callback(hObject, eventdata, handles)
-% hObject    handle to play_button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes on button press in stop_radiobutton.
 function stop_radiobutton_Callback(hObject, eventdata, handles)
 % hObject    handle to stop_radiobutton (see GCBO)
@@ -200,6 +211,27 @@ function stop_radiobutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of stop_radiobutton
+stop_state = get(handles.stop_radiobutton, 'Value');
+setappdata(handles.stop_radiobutton, 'stop_state', stop_state);
+
+
+% --- Executes on button press in play_button.
+function play_button_Callback(hObject, eventdata, handles)
+% hObject    handle to play_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+cell_of_gens = getappdata(handles.load_button, 'cell_of_gens');
+gen_num = getappdata(handles.load_button, 'gen_num');
+frame_rate = getappdata(handles.frameRate_popup, 'frame_rate');
+while getappdata(handles.stop_radiobutton, 'stop_state')==0
+    gen_num = gen_num+1;
+    cell_of_gens{gen_num+1} = GOL(cell_of_gens{gen_num});
+    imagesc(handles.axes1, cell_of_gens{gen_num+1});
+    colormap(gray);
+    pause(1 / frame_rate);
+    setappdata(handles.load_button, 'cell_of_gens', cell_of_gens);
+    setappdata(handles.load_button, 'gen_num', gen_num);
+end
 
 
 % --- Executes on selection change in frameRate_popup.
@@ -210,7 +242,11 @@ function frameRate_popup_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns frameRate_popup contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from frameRate_popup
+str = get(handles.frameRate_popup, 'String');
+val = get(hObject,'Value');
+frame_rate = sscanf(str{val},'%d');
 
+setappdata(handles.frameRate_popup, 'frame_rate', frame_rate);
 
 % --- Executes during object creation, after setting all properties.
 function frameRate_popup_CreateFcn(hObject, eventdata, handles)
@@ -230,3 +266,4 @@ function clear_button_Callback(hObject, eventdata, handles)
 % hObject    handle to clear_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+ cla(handles.axes1,'reset');
