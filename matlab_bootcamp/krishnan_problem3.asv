@@ -162,14 +162,6 @@ function stepBack_button_Callback(hObject, eventdata, handles)
 % hObject    handle to stepBack_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-cell_of_gens = getappdata(handles.load_button, 'cell_of_gens');
-gen_num = getappdata(handles.load_button, 'gen_num');
-if gen_num ~= 0
-    gen_num = gen_num-1;
-    imagesc(handles.axes1, cell_of_gens{gen_num+1});
-    colormap(gray);
-    setappdata(handles.load_button, 'gen_num', gen_num);
-end
 
 % --- Executes on button press in stepForward_button.
 function stepForward_button_Callback(hObject, eventdata, handles)
@@ -178,12 +170,7 @@ function stepForward_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 cell_of_gens = getappdata(handles.load_button, 'cell_of_gens');
 gen_num = getappdata(handles.load_button, 'gen_num');
-gen_num = gen_num+1;
-cell_of_gens{gen_num+1} = GOL(cell_of_gens{gen_num});
-imagesc(handles.axes1, cell_of_gens{gen_num+1});
-colormap(gray);
-setappdata(handles.load_button, 'cell_of_gens', cell_of_gens);
-setappdata(handles.load_button, 'gen_num', gen_num);
+next_gen = GOL(cell_of_gens())
 
 
 % --- Executes on button press in play_button.

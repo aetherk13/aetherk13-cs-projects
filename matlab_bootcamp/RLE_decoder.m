@@ -27,8 +27,6 @@ function [out_mat] = RLE_decoder(filename)
                 if row_split{j}(1)=='o'
                     out_mat(i,index) = 1;
                 end
-                display(index)
-                display(out_mat)
                 index = index + 1;
             end     
         end
