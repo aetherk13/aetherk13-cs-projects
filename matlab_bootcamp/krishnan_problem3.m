@@ -22,7 +22,7 @@ function varargout = krishnan_problem3(varargin)
 
 % Edit the above text to modify the response to help krishnan_problem3
 
-% Last Modified by GUIDE v2.5 22-Feb-2022 22:15:31
+% Last Modified by GUIDE v2.5 24-Feb-2022 21:40:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -267,3 +267,33 @@ function clear_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
  cla(handles.axes1,'reset');
+
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function export_name_Callback(hObject, eventdata, handles)
+% hObject    handle to export_name (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of export_name as text
+%        str2double(get(hObject,'String')) returns contents of export_name as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function export_name_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to export_name (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
