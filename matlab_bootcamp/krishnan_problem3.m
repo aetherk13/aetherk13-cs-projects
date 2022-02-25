@@ -22,7 +22,7 @@ function varargout = krishnan_problem3(varargin)
 
 % Edit the above text to modify the response to help krishnan_problem3
 
-% Last Modified by GUIDE v2.5 24-Feb-2022 21:40:11
+% Last Modified by GUIDE v2.5 24-Feb-2022 22:42:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -159,8 +159,9 @@ function exportMovie_button_Callback(hObject, eventdata, handles)
     prevGen = getappdata(handles.load_button, 'gen0');
     frame_rate = getappdata(handles.frameRate_popup, 'frame_rate');
     max_gen = getappdata(handles.generations_popup, 'max_gen');
+    export_name = getappdata(handles.export_name, 'export_name');
     display(max_gen);
-    v = VideoWriter("exportmovie.avi");
+    v = VideoWriter(export_name);
     v.FrameRate = frame_rate;
     open(v);
     imagesc(handles.axes1, prevGen);
@@ -269,13 +270,13 @@ function clear_button_Callback(hObject, eventdata, handles)
  cla(handles.axes1,'reset');
 
 
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
+% --- Executes on button press in exportFrame_button.
+function exportFrame_button_Callback(hObject, eventdata, handles)
+% hObject    handle to exportFrame_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
+export_name = getappdata(handles.export_name, 'export_name');
+exportgraphics(handles.axes1, export_name);
 
 function export_name_Callback(hObject, eventdata, handles)
 % hObject    handle to export_name (see GCBO)
@@ -284,6 +285,8 @@ function export_name_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of export_name as text
 %        str2double(get(hObject,'String')) returns contents of export_name as a double
+export_Name = get(handles.export_name, 'String');
+setappdata(handles.export_name, 'export_name', export_name);
 
 
 % --- Executes during object creation, after setting all properties.
